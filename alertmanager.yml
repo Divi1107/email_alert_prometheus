@@ -1,0 +1,26 @@
+global:
+  resolve_timeout: 2m
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'email_notification'
+receivers:
+  - name: 'email_notification'
+    email_configs:
+      #  - url: 'http://127.0.0.1:5001/'
+      - to: youremail@gmail.com
+        from: "email1@gmail.com,email2@gmail.com" #for single email address no need of ""
+        smarthost: smtp.gmail.com:587
+        auth_username: youremail@gmail.com
+        auth_identity: youremail@gmail.com
+        auth_password: give pswd
+        send_resolved: true
+inhibit_rules:
+  - source_match:
+      severity: 'critical'
+    target_match:
+      severity: 'warning'
+    equal: ['alertname', 'dev', 'instance']
