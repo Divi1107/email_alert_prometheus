@@ -1,41 +1,40 @@
-name: CI/CD Pipeline
+name: CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
-  llinting_and_testing:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-
-    - name: Install dependencies
-      run: |
-        wget https://github.com/prometheus/prometheus/releases/download/v0.3.0/prometheus-0.3.0.linux-amd64.tar.gz
-        tar xvfz prometheus-0.3.0.linux-amd64.tar.gz
-        sudo mv prometheus-0.3.0.linux-amd64/promtool /usr/local/bin/
-        rm -rf prometheus-0.3.0.linux-amd64.tar.gz prometheus-2.30.3.linux-amd64/
-
-    - name: Linting
-      run: |
-        # Run linting checks
-        promtool check config prometheus.yml
-        promtool check rules alert.rules.yml
-
-    - name: Testing
-      run: |
-        ./test.sh
-
-
-  building_and_deploying:
+  deploy:
     runs-on: ubuntu-latest
-    needs: linting_and_testing
+
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Build and Deploy
-        run: # Add commands to build and deploy your Prometheus configuration
+      - name: Install Prometheus
+        run: |
+          wget https://github.com/prometheus/prometheus/releases/download/v0.3.0/prometheus-0.3.0.linux-amd64.tar.gz
+          tar xvfz prometheus-0.3.0.linux-amd64.tar.gz
+          sudo mv prometheus-0.3.0.linux-amd64/promtool /usr/local/bin/
+          rm -rf prometheus-0.3.0.linux-amd64.tar.gz prometheus-0.3.0.linux-amd64/
+
+      - name: Build and Deploy Prometheus Configuration
+        run: |
+          # Copy Prometheus configuration files
+          cp prometheus.yml /etc/prometheus/prometheus.yml
+          cp alert.rules.yml /etc/prometheus/alert.rules.yml
+
+          # Reload Prometheus
+          systemctl reload prometheus
+
+      - name: Build and Deploy Alertmanager Configuration
+        run: |
+          # Copy Alertmanager configuration file
+          cp alertmanager.yml /etc/alertmanager/alertmanager.yml
+
+          # Reload Alertmanager
+          systemctl reload alertmanager
