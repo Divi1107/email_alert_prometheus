@@ -11,12 +11,12 @@ receivers:
   - name: 'email_notification'
     email_configs:
       #  - url: 'http://127.0.0.1:5001/'
-      - to: youremail@gmail.com
-        from: "email1@gmail.com,email2@gmail.com" #for single email address no need of ""
+      - to: divya.ynt@gmail.com
+        from: divya.ynt@gmail.com
         smarthost: smtp.gmail.com:587
-        auth_username: youremail@gmail.com
-        auth_identity: youremail@gmail.com
-        auth_password: give pswd
+        auth_username: divya.ynt@gmail.com
+        auth_identity: divya.ynt@gmail.com
+        auth_password: 
         send_resolved: true
 inhibit_rules:
   - source_match:
