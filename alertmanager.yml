@@ -16,7 +16,7 @@ receivers:
         smarthost: smtp.gmail.com:587
         auth_username: divya.ynt@gmail.com
         auth_identity: divya.ynt@gmail.com
-        auth_password: 
+        auth_password: anbf rwig wqmm piwd
         send_resolved: true
 inhibit_rules:
   - source_match:
