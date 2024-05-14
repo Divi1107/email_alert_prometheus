@@ -9,30 +9,25 @@ alerting:
   alertmanagers:
     - static_configs:
         - targets:
-           - alertmanager:9093
+          - 'localhost:9093'
 
 # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
 rule_files:
   - alert.rules.yml
-alerting:
-  alertmanagers:
-  - static_configs:
-    - targets:
-      - 'localhost:9093'
+
 
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
   - job_name: "prometheus"
-scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-       - targets: ["localhost:9090"]
-  - job_name: "node_exporter"
-
 
     # metrics_path defaults to '/metrics'
     # scheme defaults to 'http'.
 
     static_configs:
       - targets: ["localhost:9090"]
+  
+  - job_name: "node"
+    static_configs:
+      - targets: ["172.26.90.122:9100"] # Assuming 172.26.90.122 is the IP address of your node exporter
